@@ -54,11 +54,27 @@ class Products with ChangeNotifier {
         imageurl: 'https://static.cilory.com/417953-large_default/estonished-blue-heeled-sneakers.jpg',
       ),
   ];
+  // var _showFavouritesOnly = false;
+
   List<Product> get items {
+    // if (_showFavouritesOnly) {
+    //   return _items.where((prodItem)=>prodItem.isfavourite).toList();
+    // }
     return [..._items];
   }
   Product findById(String id) {
     return _items.firstWhere((prod)=>prod.id==id);
+  }
+  // void showFavouritesOnly () {
+  //   _showFavouritesOnly = true;
+  //   notifyListeners();
+  // }
+  // void showAll (){
+  //   _showFavouritesOnly = false;
+  //   notifyListeners();
+  // }
+  List<Product> get favouriteItems {
+    return _items.where((prodItem)=>prodItem.isfavourite).toList();
   }
   void addProduct() {
     // _items.add(value);
