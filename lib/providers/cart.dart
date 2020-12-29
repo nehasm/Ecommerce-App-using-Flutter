@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:intl/intl.dart';
+import 'package:mysmilespot/widgets/cart_item.dart';
 
 class CartItem{
   final String id;
@@ -48,6 +49,17 @@ class Cart with ChangeNotifier {
   }
   void removeItem(String id){
     _items.remove(id);
+    notifyListeners();
+  }
+  void removeSingleItem (String productId){
+    if(!_items.containsKey(productId)){
+      return;
+    }
+    if(_items[productId].quantity>1){
+      _items.update(productId, (existingcartitem) => CartItem(id:existingcartitem.id,title:existingcartitem.title,price:existingcartitem.price,quantity:existingcartitem.quantity -1,),);
+    }else{
+      _items.remove(productId);
+    }
     notifyListeners();
   }
   void clear() {
