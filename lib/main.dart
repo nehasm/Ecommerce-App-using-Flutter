@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mysmilespot/widgets/user_product_item.dart';
 import './screens/cart_screen.dart';
 import 'package:provider/provider.dart';
 import './screens/products_screen.dart';
@@ -7,6 +8,7 @@ import './providers/products.dart';
 import './providers/cart.dart';
 import './providers/orders.dart';
 import './screens/orders_screen.dart';
+import './screens/user_product.dart';
 void main() {
   runApp(MyApp(),);
 }
@@ -37,6 +39,7 @@ class MyApp extends StatelessWidget {
         ProductDetail.routeName:(ctx)=> ProductDetail(),
         CartScreen.routeName:(ctx)=>CartScreen(),
         OrderScreen.routeName:(ctx)=>OrderScreen(),
+        UserProductsScreen.routeName:(ctx)=>UserProductsScreen(),
       }
     ),);
   }
