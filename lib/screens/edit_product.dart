@@ -33,6 +33,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
     'price':'',
     'imageurl':'',
   };
+  var _isloading = false;
   @override
   void didChangeDependencies() {
     if (_isInit){
@@ -60,19 +61,45 @@ class _EditProductScreenState extends State<EditProductScreen> {
     _imageUrlFocusNode.dispose();
     super.dispose();
   }
-  void _saveform(){
+  Future<void> _saveform() async {
     final isValid = _form.currentState.validate();
     if (!isValid){
       return ;
     }
     _form.currentState.save();
+    setState(() {
+      _isloading = true;
+    });  
     if (_editedProduct.id!=null){
-      Provider.of<Products>(context,listen: false,).updateProduct(_editedProduct.id,_editedProduct);
-    }else{
-    Provider.of<Products>(context,listen: false,).addProduct(_editedProduct);
+      await Provider.of<Products>(context,listen: false,).updateProduct(_editedProduct.id,_editedProduct);
+    } else{
+      try{
+        await Provider.of<Products>(context,listen: false,).addProduct(_editedProduct);
+      } catch (error){
+        await showDialog(context: context,
+        builder:(ctx)=>
+        AlertDialog(title: Text('An error occured'),
+        content: Text('Something went wrong.'),
+        actions: [
+        FlatButton(onPressed: () {
+          Navigator.of(ctx).pop();
+        }, child: Text('Okay'))
+      ],
+      )
+      );
+      } 
+      // finally {
+      //   setState(() {
+      //   _isloading = false;
+      // });
+      // Navigator.of(context).pop();
+      // }
     }
-    Navigator.of(context).pop();
-  }
+    setState(() {
+        _isloading = false;
+      });
+      Navigator.of(context).pop();
+    }
   void _updateImageUrl (){
     if(!_imageUrlFocusNode.hasFocus){
       if (_imageurlController.text.isEmpty || 
@@ -92,7 +119,10 @@ class _EditProductScreenState extends State<EditProductScreen> {
           IconButton(icon: Icon(Icons.save), onPressed:_saveform, )
         ],
         ),
-        body: Padding(
+        body: _isloading? 
+        Center(child:CircularProgressIndicator(),
+        )
+        :Padding(
           padding: const EdgeInsets.all(16.0),
         child:Form(
           key: _form,

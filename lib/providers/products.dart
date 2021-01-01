@@ -1,58 +1,59 @@
 import 'package:flutter/foundation.dart';
-
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import './product.dart';
+import 'package:http/http.dart' as http;
 class Products with ChangeNotifier {
   List<Product> _items = [
-    Product(
-      id: 'm1',
-      title: 'shirt',
-      description: 'Its a beautiful shirt',
-      price: 34.89,
-      imageurl: 'https://static.cilory.com/273124-thickbox_default/nologo-navy-casual-shirt.jpg',
-    ),
-    Product(
-      id: 'm2',
-      title: 'skirt',
-      description: 'Model Skirt',
-      price: 99.65,
-      imageurl: 'https://static.cilory.com/468597-large_default/navy-floral-printed-georgette-long-skirt.jpg',
-    ),
-    Product(
-      id: 'm3',
-      title: 'tshirt',
-      description: 'Wetern tshirt',
-      price: 45.33,
-      imageurl: 'https://static.cilory.com/423289-large_default/comfort-lady-red-short-sleeve-tee.jpg',
-    ),
-    Product(
-      id:'m4',
-      title: 'dress',
-      description: 'Beautiful Indian dress',
-      price: 65.89,
-      imageurl: 'https://static.cilory.com/434303-large_default/black-brown-chanderi-cotton-un-stitched-suit.jpg',
-    ),
-    Product(
-      id: 'm5',
-      title: 'jacket',
-      description: 'Colorful fancy scaff',
-      price: 34.55,
-      imageurl: 'https://static.cilory.com/418437-large_default/slingshot-navy-heavy-winter-jacket.jpg',
-    ),
-    Product(
-      id: 'm6',
-      title: 'jeans',
-      description: 'Fashionale denim',
-      price: 89.99,
-      imageurl: 'https://static.cilory.com/295061-large_default/spykar-giselle-dark-blue-low-rise-jegging.jpg',
-      ),
-      Product(
-        id: 'm7',
-        title: 'shoes',
-        description: 'Comfortable shoes',
-        price: 78.43,
-        imageurl: 'https://static.cilory.com/417953-large_default/estonished-blue-heeled-sneakers.jpg',
-      ),
+  //   Product(
+  //     id: 'm1',
+  //     title: 'shirt',
+  //     description: 'Its a beautiful shirt',
+  //     price: 34.89,
+  //     imageurl: 'https://static.cilory.com/273124-thickbox_default/nologo-navy-casual-shirt.jpg',
+  //   ),
+  //   Product(
+  //     id: 'm2',
+  //     title: 'skirt',
+  //     description: 'Model Skirt',
+  //     price: 99.65,
+  //     imageurl: 'https://static.cilory.com/468597-large_default/navy-floral-printed-georgette-long-skirt.jpg',
+  //   ),
+  //   Product(
+  //     id: 'm3',
+  //     title: 'tshirt',
+  //     description: 'Wetern tshirt',
+  //     price: 45.33,
+  //     imageurl: 'https://static.cilory.com/423289-large_default/comfort-lady-red-short-sleeve-tee.jpg',
+  //   ),
+  //   Product(
+  //     id:'m4',
+  //     title: 'dress',
+  //     description: 'Beautiful Indian dress',
+  //     price: 65.89,
+  //     imageurl: 'https://static.cilory.com/434303-large_default/black-brown-chanderi-cotton-un-stitched-suit.jpg',
+  //   ),
+  //   Product(
+  //     id: 'm5',
+  //     title: 'jacket',
+  //     description: 'Colorful fancy scaff',
+  //     price: 34.55,
+  //     imageurl: 'https://static.cilory.com/418437-large_default/slingshot-navy-heavy-winter-jacket.jpg',
+  //   ),
+  //   Product(
+  //     id: 'm6',
+  //     title: 'jeans',
+  //     description: 'Fashionale denim',
+  //     price: 89.99,
+  //     imageurl: 'https://static.cilory.com/295061-large_default/spykar-giselle-dark-blue-low-rise-jegging.jpg',
+  //     ),
+  //     Product(
+  //       id: 'm7',
+  //       title: 'shoes',
+  //       description: 'Comfortable shoes',
+  //       price: 78.43,
+  //       imageurl: 'https://static.cilory.com/417953-large_default/estonished-blue-heeled-sneakers.jpg',
+  //     ),
   ];
   // var _showFavouritesOnly = false;
 
@@ -76,21 +77,74 @@ class Products with ChangeNotifier {
   List<Product> get favouriteItems {
     return _items.where((prodItem)=>prodItem.isfavourite).toList();
   }
-  void addProduct(Product product) {
+  Future<void> fetchProducts() async{
+    const url = 'https://flutter-ecommerce-app-b2e20-default-rtdb.firebaseio.com/products.json';
+    try {
+      final response = await http.get(url);
+      final extractdata = json.decode(response.body) as Map<String,dynamic>;
+      final List<Product> loadedProducts = [];
+      extractdata.forEach((prodId, prodData) {
+        loadedProducts.add(Product(
+          id:prodId,
+          title:prodData['title'],
+          description:prodData['description'],
+          price:prodData['price'],
+          isfavourite:prodData['isfavourite'],
+          imageurl:prodData['imageurl'],
+        )
+       );});
+       _items=loadedProducts;
+       notifyListeners();
+    } catch(error) {
+      throw (error);
+    }
+    
+  }
+
+
+
+
+
+
+
+  Future<void> addProduct(Product product) async {
+    const url = 'https://flutter-ecommerce-app-b2e20-default-rtdb.firebaseio.com/products.json';
+    try{
+    final response = await http.post(url,
+    body: json.encode({
+      'title':product.title,
+      'description':product.description,
+      'imageurl':product.imageurl,
+      'price':product.price,
+      'isfavourite':product.isfavourite,
+    })
+    );
     final newProduct = Product(
       title: product.title,
-      id: DateTime.now().toString(),
+      id: json.decode(response.body)['name'],
       imageurl: product.imageurl,
       description: product.description,
-      price: product.price
+      price: product.price,
     );
     _items.add(newProduct);
-    // _items.insert(0, newProduct);
     notifyListeners();
+    } catch(error){
+      print(error);
+      throw error;
+    }
+      
   }
-  void updateProduct(String id,Product newProduct){
+  Future<void> updateProduct (String id,Product newProduct) async{
     final prodIndex = _items.indexWhere((prod) => prod.id==id);
     if (prodIndex>0){
+    final url = 'https://flutter-ecommerce-app-b2e20-default-rtdb.firebaseio.com/products/$id.json';
+    await http.patch(url,
+    body:json.encode({
+      'title':newProduct.title,
+      'description':newProduct.description,
+      'price':newProduct.price,
+      'imageurl':newProduct.imageurl,
+    }));
     _items[prodIndex]=newProduct;
     notifyListeners();
     } else{
