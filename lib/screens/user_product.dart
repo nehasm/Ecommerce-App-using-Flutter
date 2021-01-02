@@ -7,11 +7,11 @@ import './edit_product.dart';
 class UserProductsScreen extends StatelessWidget {
   static const routeName = '/user-products';
   Future<void> _refreshProducts(BuildContext context) async{
-    Provider.of<Products>(context).fetchProducts();
+    Provider.of<Products>(context,listen: false,).fetchProducts();
   }
   @override
   Widget build(BuildContext context) {
-    final productsData = Provider.of<Products>(context);
+    final productsData = Provider.of<Products>(context,);
     return Scaffold(
       appBar: AppBar(
       title:const Text('Your Products'),
