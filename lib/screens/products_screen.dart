@@ -84,7 +84,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
       ]
       ),
       drawer: AppDrawer(),
-      body:_isloading?Center(child:CircularProgressIndicator(),)  :ProductsGrid(_showOnlyFavourites),
+      body:_isloading?Center(child:CircularProgressIndicator(),) :ProductsGrid(_showOnlyFavourites),
     );
   }
 }

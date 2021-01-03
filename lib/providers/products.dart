@@ -57,7 +57,9 @@ class Products with ChangeNotifier {
   //     ),
   ];
   // var _showFavouritesOnly = false;
-
+  final String userId;
+  final String authToken;
+  Products(this.authToken,this.userId,this._items);
   List<Product> get items {
     // if (_showFavouritesOnly) {
     //   return _items.where((prodItem)=>prodItem.isfavourite).toList();
@@ -79,10 +81,13 @@ class Products with ChangeNotifier {
     return _items.where((prodItem)=>prodItem.isfavourite).toList();
   }
   Future<void> fetchProducts() async{
-    const url = 'https://flutter-ecommerce-app-b2e20-default-rtdb.firebaseio.com/products.json';
+    final url = 'https://flutter-ecommerce-app-b2e20-default-rtdb.firebaseio.com/products.json?auth=$authToken';
+    // final url = 'https://flutter-ecommerce-app-b2e20-default-rtdb.firebaseio.com/products.json';
     try {
       final response = await http.get(url);
       final extractdata = json.decode(response.body) as Map<String,dynamic>;
+      print(extractdata);
+      final favouriteResponse = http.get('https://flutter-ecommerce-app-b2e20-default-rtdb.firebaseio.com/userFavorites/$userId.json?auth=$authToken');
       final List<Product> loadedProducts = [];
       if (extractdata==null){
         return;
@@ -105,14 +110,8 @@ class Products with ChangeNotifier {
     
   }
 
-
-
-
-
-
-
   Future<void> addProduct(Product product) async {
-    const url = 'https://flutter-ecommerce-app-b2e20-default-rtdb.firebaseio.com/products.json';
+    final url = 'https://flutter-ecommerce-app-b2e20-default-rtdb.firebaseio.com/products.json?auth=$authToken';
     try{
     final response = await http.post(url,
     body: json.encode({
@@ -120,7 +119,6 @@ class Products with ChangeNotifier {
       'description':product.description,
       'imageurl':product.imageurl,
       'price':product.price,
-      'isfavourite':product.isfavourite,
     })
     );
     final newProduct = Product(
@@ -141,7 +139,7 @@ class Products with ChangeNotifier {
   Future<void> updateProduct (String id,Product newProduct) async{
     final prodIndex = _items.indexWhere((prod) => prod.id==id);
     if (prodIndex>0){
-    final url = 'https://flutter-ecommerce-app-b2e20-default-rtdb.firebaseio.com/products/$id.json';
+    final url = 'https://flutter-ecommerce-app-b2e20-default-rtdb.firebaseio.com/products/$id.json?auth=$authToken';
     await http.patch(url,
     body:json.encode({
       'title':newProduct.title,
@@ -156,7 +154,7 @@ class Products with ChangeNotifier {
     }
   }
   Future<void> deleteProduct(String id) async{
-    final url = 'https://flutter-ecommerce-app-b2e20-default-rtdb.firebaseio.com/products/$id.json';
+    final url = 'https://flutter-ecommerce-app-b2e20-default-rtdb.firebaseio.com/products/$id.json?auth=$authToken';
     final existingProductIndex = _items.indexWhere((prod) => prod.id==id);
     var existingProduct = _items[existingProductIndex];    
     _items.removeAt(existingProductIndex);
