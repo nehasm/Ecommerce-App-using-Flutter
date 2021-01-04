@@ -18,8 +18,8 @@ class Auth with ChangeNotifier {
     }
     return null;
   }
-  String get userId{
-    return userId;
+  String get userId {
+    return _userId;
   }
   Future<void> _authenticate(String email,String password,String urlsegment) async{
     final  url = 'https://identitytoolkit.googleapis.com/v1/accounts:$urlsegment?key=AIzaSyDGkRMzIXhraf1z4dA9q8SU9L1DpVXJNL0';
@@ -34,7 +34,6 @@ class Auth with ChangeNotifier {
       ),
       );
       final responseData = json.decode(response.body);
-      print(response.body);
       if(responseData['error']!=null){
         throw HttpException(responseData['error']['message']);
       }

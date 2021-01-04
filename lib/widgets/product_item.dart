@@ -9,7 +9,6 @@ class ProductItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = Provider.of<Product>(context,listen: false);
-    print(product);
     final cart = Provider.of<Cart>(context,listen: false,);
     final authData = Provider.of<Auth>(context,listen:false);
     return ClipRRect(
@@ -28,7 +27,7 @@ class ProductItem extends StatelessWidget {
         leading: Consumer<Product>(
           builder:(ctx,product,chid)=>IconButton(icon: Icon(product.isfavourite? Icons.favorite: Icons.favorite_border,),
         onPressed: () {
-          product.toggleFavouriteStatus(authData.token,authData.userId,);
+          product.toggleFavouriteStatus(authData.token,authData.userId);
         },
         color: Theme.of(context).accentColor,
         ),),

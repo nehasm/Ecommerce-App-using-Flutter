@@ -23,10 +23,10 @@ class Product with ChangeNotifier{
     notifyListeners();
   }
   Future<void> toggleFavouriteStatus(String token,String userId)async {
-    final url = 'https://flutter-ecommerce-app-b2e20-default-rtdb.firebaseio.com/userFavorites/$userId/$id.json?auth=$token';
     final oldStatus = isfavourite;
     isfavourite = !isfavourite;
     notifyListeners();
+    final url = 'https://flutter-ecommerce-app-b2e20-default-rtdb.firebaseio.com/userFavorites/$userId/$id.json?auth=$token'; 
     try{
       final response= await http.put(url,
       body:json.encode({

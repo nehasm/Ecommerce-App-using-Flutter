@@ -80,25 +80,27 @@ class Products with ChangeNotifier {
   List<Product> get favouriteItems {
     return _items.where((prodItem)=>prodItem.isfavourite).toList();
   }
-  Future<void> fetchProducts() async{
-    final url = 'https://flutter-ecommerce-app-b2e20-default-rtdb.firebaseio.com/products.json?auth=$authToken';
+  Future<void> fetchProducts([bool filterByUser = false]) async{
+    final filterString = filterByUser ? 'orderBy="creatorId"&equalTo="$userId"': '';
+    var url = 'https://flutter-ecommerce-app-b2e20-default-rtdb.firebaseio.com/products.json?auth=$authToken&$filterString';
     // final url = 'https://flutter-ecommerce-app-b2e20-default-rtdb.firebaseio.com/products.json';
     try {
       final response = await http.get(url);
       final extractdata = json.decode(response.body) as Map<String,dynamic>;
-      print(extractdata);
-      final favouriteResponse = http.get('https://flutter-ecommerce-app-b2e20-default-rtdb.firebaseio.com/userFavorites/$userId.json?auth=$authToken');
-      final List<Product> loadedProducts = [];
       if (extractdata==null){
         return;
       }
+      url = 'https://flutter-ecommerce-app-b2e20-default-rtdb.firebaseio.com/userFavorites/$userId.json?auth=$authToken';
+      final favoriteResponse = await http.get(url);
+      final favoriteData = json.decode(favoriteResponse.body);
+      final List<Product> loadedProducts = [];
       extractdata.forEach((prodId, prodData) {
         loadedProducts.add(Product(
           id:prodId,
           title:prodData['title'],
           description:prodData['description'],
           price:prodData['price'],
-          isfavourite:prodData['isfavourite'],
+          isfavourite:favoriteData==null?false:favoriteData[prodId]??false,
           imageurl:prodData['imageurl'],
         )
        );});
@@ -119,6 +121,7 @@ class Products with ChangeNotifier {
       'description':product.description,
       'imageurl':product.imageurl,
       'price':product.price,
+      'creatorId': userId,
     })
     );
     final newProduct = Product(
