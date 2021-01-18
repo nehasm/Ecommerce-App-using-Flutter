@@ -18,10 +18,12 @@ class ProductItem extends StatelessWidget {
       onTap: () {
         Navigator.of(context).pushNamed(ProductDetail.routeName,arguments: product.id,);
       },
-      child: Image.network(
-      product.imageurl,
-      fit: BoxFit.cover,
-      ),),
+      child: FadeInImage(placeholder: AssetImage('assets/images/product-placeholder.png'),
+      image: NetworkImage(product.imageurl),
+      fit: BoxFit.cover
+      ,)
+       
+      ),
       footer: GridTileBar(
         backgroundColor: Colors.black87,
         leading: Consumer<Product>(
