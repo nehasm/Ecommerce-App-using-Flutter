@@ -7,7 +7,7 @@ import './edit_product.dart';
 class UserProductsScreen extends StatelessWidget {
   static const routeName = '/user-products';
   Future<void> _refreshProducts(BuildContext context) async{
-    Provider.of<Products>(context,listen: false,).fetchProducts(true);
+    await Provider.of<Products>(context,listen: false,).fetchProducts(true);
   }
   @override
   Widget build(BuildContext context) {
@@ -29,7 +29,7 @@ class UserProductsScreen extends StatelessWidget {
           ): RefreshIndicator (
           onRefresh: ()=> _refreshProducts(context),
           child: Consumer<Products>(
-                      builder: (ctx,productsData,_) =>Padding(
+            builder: (ctx,productsData,_) =>Padding(
             padding: EdgeInsets.all(8),
             child: ListView.builder(
               itemCount: productsData.items.length,

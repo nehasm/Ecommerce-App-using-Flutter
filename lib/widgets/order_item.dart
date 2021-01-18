@@ -41,8 +41,8 @@ class _OrderItemState extends State<OrderItem> {
               style: TextStyle(fontSize:18,color: Colors.black87, ),)
             ],)).toList()),
         )
-      ],),
-      
+      ],
+      ),     
     );
   }
 }

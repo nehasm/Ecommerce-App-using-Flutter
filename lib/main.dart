@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mysmilespot/providers/product.dart';
+import './screens/splash_screen.dart';
 import './screens/edit_product.dart';
 import './widgets/user_product_item.dart';
 import './screens/cart_screen.dart';
@@ -34,7 +35,7 @@ class MyApp extends StatelessWidget {
       create: (ctx)=> Cart(),
       ),
       ChangeNotifierProxyProvider<Auth,Orders>(
-        update: (ctx,auth,previousOrders)=>Orders(auth.token,previousOrders==null?[]:previousOrders),
+        update: (ctx,auth,previousOrders)=>Orders(auth.token,auth.userId, previousOrders==null?[]:previousOrders.orders),
       ),
     ],
     
@@ -45,7 +46,11 @@ class MyApp extends StatelessWidget {
       accentColor: Colors.orange,
       fontFamily: 'Lato',
       ),
-      home:auth.isAuth? ProductsScreen(): AuthScreen(),
+      home:auth.isAuth
+      ? ProductsScreen()
+      : FutureBuilder(
+        future: auth.tryAutologin(),
+        builder: (ctx,authResultSnapshot)=>authResultSnapshot.connectionState == ConnectionState.waiting? SplashScreen(): AuthScreen(),) ,
       // home: ProductDetail(),
       routes : {
         ProductDetail.routeName:(ctx)=> ProductDetail(),
@@ -54,6 +59,8 @@ class MyApp extends StatelessWidget {
         UserProductsScreen.routeName:(ctx)=>UserProductsScreen(),
         EditProductScreen.routeName:(ctx)=>EditProductScreen(),
       }
-    ),),); 
+    ),
+    ),
+    ); 
   }
 }
