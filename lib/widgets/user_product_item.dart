@@ -24,7 +24,7 @@ class UserProductItem extends StatelessWidget {
             Navigator.of(context).pushNamed(EditProductScreen.routeName,
             arguments: id);
           },
-          color: Theme.of(context).primaryColor,),
+          color: Theme.of(context).accentColor,),
           IconButton(icon: Icon(Icons.delete),
           onPressed: () async{
             try {
@@ -34,7 +34,7 @@ class UserProductItem extends StatelessWidget {
             }
             
           },
-          color: Theme.of(context).errorColor,),
+          color: Theme.of(context).accentColor,),
         ],
         ),
     ),

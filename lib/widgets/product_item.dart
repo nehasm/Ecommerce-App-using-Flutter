@@ -60,12 +60,17 @@ class ProductItem extends StatelessWidget {
                   )
                   ],
                   ),
+                  Row(children: [
+                  Text("99.99",style: TextStyle(decoration: TextDecoration.lineThrough),),
+                  SizedBox(width:20),
                   Container(
                     alignment: Alignment.topLeft,
-                    child: Text("Price: \$${product.price}", 
+                    child: Text("\$${product.price}", 
                     textAlign:TextAlign.left,
                     style: TextStyle(fontSize: 14,color: Colors.black),),
                   )
+                  ],)
+                  
                 ],),
               )
               

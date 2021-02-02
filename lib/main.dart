@@ -43,7 +43,7 @@ class MyApp extends StatelessWidget {
       title:'MySmileSpot',
       theme:ThemeData(
       primaryColor: Colors.grey[700],
-      accentColor: Colors.orange,
+      accentColor: Colors.black,
       fontFamily: 'Lato',
       ),
       home:auth.isAuth

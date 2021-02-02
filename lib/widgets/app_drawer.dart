@@ -9,7 +9,7 @@ class AppDrawer extends StatelessWidget {
     return Drawer(
       child: Column(children: [
         AppBar(
-          title: Text('Hello'),
+          title: Text('MySmilespot'),
           automaticallyImplyLeading: false,
           ),
           Divider(),

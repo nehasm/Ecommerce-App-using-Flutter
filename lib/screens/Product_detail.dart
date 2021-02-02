@@ -20,7 +20,7 @@ class ProductDetail extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.all(10.0),
             child: Container(
-            width: double.infinity,
+            width: 270,
             height:370,
             child:Container(
                 decoration: BoxDecoration(
@@ -42,7 +42,7 @@ class ProductDetail extends StatelessWidget {
         ),
       // SizedBox(height:10),
       Padding(
-        padding: const EdgeInsets.symmetric(horizontal:20),
+        padding: const EdgeInsets.symmetric(horizontal:30),
         child: Container(
           alignment: Alignment.topLeft,
           child: Text('Price: \$${loadedProduct.price}',style:TextStyle(color: Colors.black,fontSize: 20,

@@ -48,7 +48,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
     final productContainer = Provider.of<Products>(context,listen: false,);
     return Scaffold(
       appBar: AppBar(
-      title: Text('MyShop'),
+      title: Text('MySmilespot'),
       actions: <Widget>[
         PopupMenuButton(
         onSelected : (FilterOptions selectedValue){
